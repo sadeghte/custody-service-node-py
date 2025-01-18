@@ -1,0 +1,7 @@
+{
+    "SOL": [
+        {"symbol": "SOL", "name": "Solana native token", "decimals": 9},
+        {"symbol": "Coin1", "name": "Coint 1", "decimals": 4, "contract": "GhAP7HqXjzjUnFMpbu9DghNSopS2GSv79po6774K9Bia"},
+        {"symbol": "Coin2", "name": "Coint 2", "decimals": 2, "contract": "386RtuptxikGfXtwqxr4hRBHNwdDXaShwCYt7eBHiGiY"}
+    ]
+}

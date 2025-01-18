@@ -1,0 +1,7 @@
+flask-cors==5.0.0
+pyfrost @ file:///home/sadegh/Projects/zellular/pyfrost
+pymongo==4.10.1
+python-dotenv==1.0.1
+redis==5.2.1
+aioredis==2.0.1
+solana==0.36.2

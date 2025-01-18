@@ -1,0 +1,27 @@
+{
+  "name": "custody-service-node-py",
+  "version": "1.0.0",
+  "description": "```bash # node ids: 1, 2, 3, ... $ dotenv -f node-<id>.env run -- python node.py ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@solana/spl-token": "^0.4.9",
+    "axios": "^1.7.9",
+    "bs58": "^6.0.0",
+    "mongodb": "^6.12.0",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.0",
+    "@types/node": "^22.9.0",
+    "dotenv": "^16.4.5",
+    "prettier": "^2.6.2",
+    "typescript": "^4.3.5"
+  }
+}

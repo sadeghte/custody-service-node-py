@@ -1,0 +1,20 @@
+[project]
+name = "custody_service"
+version = "0.1.0"
+description = ""  # Add a description if needed
+authors = [{ name = "Your Name", email = "your.email@example.com" }]
+dependencies = [
+    "flask-cors==5.0.0",
+    # "frost_lib @ git+https://github.com/sadeghte/frost-lib.git@main",
+    "pyfrost @ file:///home/sadegh/Projects/zellular/pyfrost",
+	
+	"pymongo==4.10.1",
+	"python-dotenv==1.0.1",
+    "redis==5.2.1",
+    "aioredis==2.0.1",
+    "solana==0.36.1"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
