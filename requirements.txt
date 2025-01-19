@@ -1,5 +1,6 @@
+dotenv-cli==3.4.1
 flask-cors==5.0.0
-pyfrost @ file:///home/sadegh/Projects/zellular/pyfrost
+pyfrost @ git+https://github.com/zellular-xyz/pyfrost@main
 pymongo==4.10.1
 python-dotenv==1.0.1
 redis==5.2.1
