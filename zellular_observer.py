@@ -35,7 +35,7 @@ async def observe_zellular():
                         print("inserting deposits into db ...")
                         for d in tx["data"]:
                             print("doc to be inserted: ", json.dumps(d, indent=2))
-                            database.insert_deposit({**d, "confirmed": False})
+                            database.insert_deposit({**d, "confirmed": False, "transferred": False})
                     case "AddWithdraw":
                         withdraw = tx["data"]
                         database.insert_new_withdraw(withdraw)
