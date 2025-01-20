@@ -1,5 +1,5 @@
 flask-cors==5.0.0
-pyfrost @ git+https://github.com/zellular-xyz/pyfrost@main
+pyfrost @ git+https://github.com/zellular-xyz/pyfrost@zcash
 pymongo==4.10.1
 python-dotenv==1.0.1
 redis==5.2.1
