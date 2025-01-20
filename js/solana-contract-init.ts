@@ -3,11 +3,13 @@ import {
 } from "@solana/web3.js";
 import { Assetman } from "./assetman/assetman";
 
-const FROST_ED25519_PUBKEY = "0c3e8b85340b3df11373e1382f3921e45364bb71517a7c97ee4bb8d9b71e2c17"
+const FROST_ED25519_PUBKEY = process.env.FROST_ED25519_PUBKEY
 const SOLANA_NODE_RPC = process.env.SOLANA_NODE_RPC;
 const SOLANA_KEYPAIR = process.env.SOLANA_KEYPAIR;
 const SOLANA_ASSETMAN_ADDRESS = process.env.SOLANA_ASSETMAN_ADDRESS;
 
+if (!FROST_ED25519_PUBKEY)
+    throw `FROST_ED25519_PUBKEY env variable not set`
 if (!SOLANA_NODE_RPC)
     throw `SOLANA_NODE_RPC env variable not set`
 if (!SOLANA_KEYPAIR)

@@ -28,6 +28,9 @@ $ dotenv -f .env run -- python deposit_validator.py <chain-id>
 # initialize network to generate frost key
 $ python withdraw_approver.py init <running node count> <threshold>
 
+# initialize contract to store frost key on-chain
+$ dotenv -f node-<id>.env run -- npx ts-node ./js/solana-contract-init.ts
+
 # start approver to gather the avs signature and approve the withdraws
 # it must be run on the one of nodes to access its withdraw collection
 $ dotenv -f node-<id>.env run -- python withdraw_approver.py
