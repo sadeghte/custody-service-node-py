@@ -56,7 +56,7 @@ def run_node() -> None:
     app = Flask(__name__)
     app.register_blueprint(frost_node.blueprint, url_prefix="/pyfrost")
     app.register_blueprint(jsonrpc.blueprint, url_prefix="/jsonrpc")
-    app.run(host=node_info["host"], port=int(node_info["port"]), debug=True)
+    app.run(host="0.0.0.0", port=int(node_info["port"]), debug=True)
 
 
 if __name__ == "__main__":
