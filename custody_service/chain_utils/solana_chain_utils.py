@@ -4,9 +4,7 @@ from custody_service.database.db_withdraws import WithdrawDoc
 import hashlib, json, os
 
 
-SOLANA_NODE_RPC = "http://localhost:8899"
-# SOLANA_NODE_RPC = "https://api.mainnet-beta.solana.com"
-# SOLANA_NODE_RPC = "https://api.devnet.solana.com"
+SOLANA_NODE_RPC = os.getenv("SOLANA_NODE_RPC")
 
 
 async def get_slot(commitment:str="finalized"):
