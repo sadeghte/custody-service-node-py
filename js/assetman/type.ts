@@ -71,6 +71,32 @@ export type ZexAssetmanSol = {
         ]
       },
       {
+        "name": "setWithdrawAuthority",
+        "accounts": [
+          {
+            "name": "configs",
+            "isMut": true,
+            "isSigner": false
+          },
+          {
+            "name": "admin",
+            "isMut": true,
+            "isSigner": true
+          },
+          {
+            "name": "systemProgram",
+            "isMut": false,
+            "isSigner": false
+          }
+        ],
+        "args": [
+          {
+            "name": "withdrawAuthor",
+            "type": "publicKey"
+          }
+        ]
+      },
+      {
         "name": "transferSolToMainVault",
         "accounts": [
           {
@@ -432,6 +458,32 @@ export type ZexAssetmanSol = {
         "args": [
           {
             "name": "adminToRemove",
+            "type": "publicKey"
+          }
+        ]
+      },
+      {
+        "name": "setWithdrawAuthority",
+        "accounts": [
+          {
+            "name": "configs",
+            "isMut": true,
+            "isSigner": false
+          },
+          {
+            "name": "admin",
+            "isMut": true,
+            "isSigner": true
+          },
+          {
+            "name": "systemProgram",
+            "isMut": false,
+            "isSigner": false
+          }
+        ],
+        "args": [
+          {
+            "name": "withdrawAuthor",
             "type": "publicKey"
           }
         ]

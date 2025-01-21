@@ -17,7 +17,7 @@ import asyncio
 # TODO: Merge examples with libp2p.
 
 
-FROST_KEY_CONFIG_PATH = "frost-key-SOL.json"
+FROST_KEY_CONFIG_PATH = "./frost-keys/SOL.json"
 zellular = get_zellular()
 
 def init_logs():
@@ -54,6 +54,7 @@ async def init():
     then = timeit.default_timer()
     
     # Writing JSON data to the file
+    os.makedirs(os.path.dirname(FROST_KEY_CONFIG_PATH), exist_ok=True)
     with open(FROST_KEY_CONFIG_PATH, "w") as file:
         json.dump(dkg_key, file, indent=4)
 
