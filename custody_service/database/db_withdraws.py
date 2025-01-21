@@ -90,6 +90,14 @@ schema = {
                     "signature": {
                         "bsonType": "string",
                         "description": "avs_signature.signature must be a string and is optional"
+                    },
+                    "nonSigners": {
+                        "bsonType": "array",
+                        "items": {
+                            "bsonType": "string",
+                            "description": "Each nonSigner must be a hex string"
+                        },
+                        "description": "nonSigners must be an array of hex string and is required"
                     }
                 }
             },

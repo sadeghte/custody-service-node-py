@@ -97,11 +97,15 @@ def get_withdraws(agent: str=None, account: int=None, user: int = None, status: 
     })
     
 
-def approve_withdraw(id: str, avs_verifying_key: str, avs_signature: str):
+def approve_withdraw(id: str, avs_verifying_key: str, avs_signature: str, nonSigners: list[str]=[]):
     return withdraws_collection.update_one(
         {"id": id}, 
         {"$set": {
-            "avsSignature": {"verifyingKey": avs_verifying_key, "signature": avs_signature},
+            "avsSignature": {
+                "verifyingKey": avs_verifying_key, 
+                "signature": avs_signature,
+                "nonSigners": nonSigners,
+            },
             "status": "approved"
         }}
     );
