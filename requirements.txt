@@ -5,3 +5,4 @@ python-dotenv==1.0.1
 redis==5.2.1
 aioredis==2.0.1
 solana==0.36.2
+tonsdk==1.0.15
