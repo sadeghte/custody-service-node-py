@@ -46,9 +46,8 @@ schema = {
                         "description": "Contract must be a string and is optional"
                     },
                     "amount": {
-                        "bsonType": "int",
-                        "minimum": 0,
-                        "description": "Amount must be a non-negative integer and is required"
+                        "bsonType": "string",
+                        "description": "Amount must be a string",
                     },
                     "decimals": {
                         "bsonType": "int",
@@ -56,6 +55,9 @@ schema = {
                         "description": "Decimals must be a non-negative integer and is required"
                     }
                 }
+            },
+            "extra": {
+                "bsonType": "object"
             },
 			"confirmed": {
 				"bsonType": "bool",

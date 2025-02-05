@@ -4,7 +4,7 @@ import { Db } from "mongodb";
 const schema = {
   $jsonSchema: {
     bsonType: "object",
-    required: ["chain", "block", "txHash", "agent", "account", "user", "address", "deposit", "confirmed"],
+    required: ["chain", "txHash", "agent", "account", "user", "address", "deposit", "confirmed"],
     properties: {
       chain: {
         enum: Object.values(ChainID),
@@ -47,9 +47,8 @@ const schema = {
             description: "Contract must be a string and is optional",
           },
           amount: {
-            bsonType: "int",
-            minimum: 0,
-            description: "Amount must be a non-negative integer and is required",
+            bsonType: "string",
+            description: "Amount must be a string",
           },
           decimals: {
             bsonType: "int",
@@ -58,10 +57,21 @@ const schema = {
           },
         },
       },
+      extra: {
+        bsonType: "object"
+      },
       confirmed: {
         bsonType: "bool",
         description: "Confirmed must be a boolean and it is required.",
-      }
+      },
+      transferred: {
+          "bsonType": "bool",
+          "description": "transferred to main vault or not.",
+      },
+      transferTx: {
+          "bsonType": "string",
+          "description": "transfer transaction hash",
+      },
     },
   },
 };

@@ -57,19 +57,20 @@ export type DepositAddressGenerator = (agentId: bigint, account: number, userId:
 type DepositedToken = {
 	token: string,
 	contract?: string,
-	amount: number,
+	amount: string,
 	decimals: number,
 }
 
 export type ZellularDepositTx = {
 	chain: ChainID,
-	block: number,
+	block?: number,
 	agent: string,
 	account: number,
 	user: number,
 	txHash: string,
 	address: string,
 	deposit: DepositedToken,
+    extra?: any,
 }
 
 export type AvailableTokenInfo = {

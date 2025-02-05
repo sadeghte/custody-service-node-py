@@ -10,6 +10,8 @@ $ dotenv -f node-<id>.env run -- python node.py
 $ dotenv -f node-<id>.env run -- python chain_observer.py <chain-id>
 # for SOL chain
 $ dotenv -f node-<id>.env run -- npx ts-node ./js/solana-chain-worker.ts
+# for TON chain
+$ dotenv -f node-<id>.env run -- npx ts-node ./js/ton-chain-worker.ts
 ```
 
 # start zellular observer
@@ -26,12 +28,17 @@ $ dotenv -f .env run -- python deposit_validator.py <chain-id>
 # Start withdraw approver
 ```bash
 # initialize network to generate frost key
-$ python withdraw_approver.py init <running node count> <threshold>
+#
+# keyTypes: ed25519, secp256k1
+$ dotenv -f node-<id>.env run -- python withdraw_approver.py init <key-type> <running node count> <threshold>
 
 # initialize contract to store frost key on-chain
 $ dotenv -f node-<id>.env run -- npx ts-node ./js/solana-contract-init.ts
 
 # start approver to gather the avs signature and approve the withdraws
 # it must be run on the one of nodes to access its withdraw collection
-$ dotenv -f node-<id>.env run -- python withdraw_approver.py
+#
+# nodeIDs: 1, 2, 3, ...
+# chainIDs: SOL, TON
+$ dotenv -f node-<id>.env run -- python withdraw_approver.py <chain-id>
 ```

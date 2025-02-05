@@ -1,7 +1,7 @@
 import {
     PublicKey, 
 } from "@solana/web3.js";
-import { Assetman } from "./assetman/assetman";
+import { SolanaAssetman } from "./assetman/sol/assetman";
 
 const FROST_ED25519_PUBKEY = process.env.FROST_ED25519_PUBKEY
 const SOLANA_NODE_RPC = process.env.SOLANA_NODE_RPC;
@@ -17,7 +17,7 @@ if (!SOLANA_KEYPAIR)
 if (!SOLANA_ASSETMAN_ADDRESS)
     throw `SOLANA_ASSETMAN_ADDRESS env variable not set`
 
-const assetman: Assetman = new Assetman({
+const assetman: SolanaAssetman = new SolanaAssetman({
     rpc: SOLANA_NODE_RPC,
     privateKey: SOLANA_KEYPAIR,
     address: SOLANA_ASSETMAN_ADDRESS

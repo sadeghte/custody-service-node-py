@@ -5,7 +5,7 @@ import { getBlockTransfers, getBlock } from './solana-chain-utils';
 import * as database from "./database/database"
 import { RedisQueue } from './redis-queue';
 import { ClusterManager } from "./cluster-manager";
-import { Assetman } from "./assetman/assetman";
+import { SolanaAssetman } from "./assetman/sol/assetman";
 import { WithdrawDoc } from "./database/db-withdraws";
 import { callCustodyServiceRpc } from "./backend-api";
 
@@ -115,7 +115,7 @@ async function fetchBlocks() {
 async function startBlockProcessor() {
     await database.init();
 
-    const assetman: Assetman = new Assetman({
+    const assetman: SolanaAssetman = new SolanaAssetman({
         rpc: SOLANA_NODE_RPC,
         privateKey: SOLANA_KEYPAIR,
         address: SOLANA_ASSETMAN_ADDRESS
@@ -146,15 +146,19 @@ async function startBlockProcessor() {
 async function executeWithdraws() {
     await database.init();
 
-    const assetman: Assetman = new Assetman({
+    const assetman: SolanaAssetman = new SolanaAssetman({
         rpc: SOLANA_NODE_RPC,
         privateKey: SOLANA_KEYPAIR,
         address: SOLANA_ASSETMAN_ADDRESS
     })
 
     while(true) {
-        const withdraws:WithdrawDoc[] = await database.getWithdraws({status: "approved", transferTx: {$exists: false}})
-        console.log(`[${withdraws.length}] pending withdraw found.`)
+        const withdraws:WithdrawDoc[] = await database.getWithdraws({
+            targetChain: ChainID.Solana, 
+            status: "approved", 
+            transferTx: {$exists: false}
+        })
+        console.log(`[${withdraws.length}] pending Solana chain withdraw found.`)
 
         if(withdraws.length > 0) {
             try {

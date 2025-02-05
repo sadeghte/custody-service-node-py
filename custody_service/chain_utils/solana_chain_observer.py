@@ -90,7 +90,7 @@ async def call_custody_rpc(method: str, params):
 async def observe():
     last_block = 0
     while True:
-        deposit_addresses = await call_custody_rpc("getDepositAddresses", {"chain": "SOL"})
+        deposit_addresses = await call_custody_rpc("getDepositAddresses", {})
         current_block = await get_slot();
         if last_block > 0:
             blocks_to_check = list(range(last_block, current_block))

@@ -61,11 +61,11 @@ def insert_deposit_address(address_data: ZellularCreateDepositAddressTx):
     return address_collection.insert_one(doc)
 
 
-def get_deposit_addresses(agent_id: str, chain: str):
+def get_deposit_addresses(agent_id: str):
     if agent_id is not None:
-        return address_collection.find({"agent": agent_id, "chain": chain})
+        return address_collection.find({"agent": agent_id})
     else:
-        return address_collection.find({"chain": chain})
+        return address_collection.find({})
 
 
 def insert_deposit(deposit: ZellularDepositTx):
@@ -84,16 +84,18 @@ def get_deposits(agent_id: str, account: int=None, user: int=None):
 def find_withdraw(id: str):
     return withdraws_collection.find_one({"id": id})
 
-def get_withdraws(agent: str=None, account: int=None, user: int = None, status: str = None):
+def get_withdraws(agent: str=None, account: int=None, user: int = None, status: str = None, target_chain: str = None):
     agent_condition = {"agent": agent} if agent is not None else {}
     account_condition = {"account": account} if account is not None else {}
     user_condition = {"user": user} if user is not None else {}
     status_condition = {"status": status} if status is not None else {}
+    chain_condition = {"targetChain": target_chain} if target_chain is not None else {}
     return withdraws_collection.find({
         **agent_condition,
         **account_condition,
         **user_condition,
         **status_condition,
+        **chain_condition
     })
     
 

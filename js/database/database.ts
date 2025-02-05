@@ -16,7 +16,7 @@ let withdrawsCollection: Collection;
 
 export async function init() {
     if (!process.env.MONGODB)
-        throw "Environment variables not loaded correctly.";
+        throw "MONGODB env variables not loaded correctly.";
     
     const client = new MongoClient(process.env.MONGODB);
     await client.connect();
@@ -40,6 +40,7 @@ export async function getDepositAddresses(filter: {agent?: string, chain?: strin
 }
 
 type GetDepositsOptions = {
+    chain?: string,
     agent?: string,
     account?: number,
     user?: number,
@@ -56,10 +57,11 @@ export async function updateDeposit(filter: Record<string, any>, update: Record<
 }
 
 type GetWithdrawsQuery = {
+    targetChain: string,
     status?: dbWithdraws.WithdrawStatus,
     transferTx?: string | {"$exists": boolean}
 }
-export async function getWithdraws(query: GetWithdrawsQuery={}): Promise<dbWithdraws.WithdrawDoc[]> {
+export async function getWithdraws(query: GetWithdrawsQuery): Promise<dbWithdraws.WithdrawDoc[]> {
     // @ts-ignore
     return withdrawsCollection.find(query).toArray();
 }

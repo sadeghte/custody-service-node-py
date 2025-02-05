@@ -12,11 +12,11 @@ import {
 import BN from "bn.js"
 import fs from "fs";
 import * as path from 'path';
-import { ChainID, TokenID, ZellularDepositTx } from "../types";
+import { ChainID, TokenID, ZellularDepositTx } from "../../types";
 import { WithdrawDoc } from "js/database/db-withdraws";
 import { getAssociatedTokenAddressSync, getOrCreateAssociatedTokenAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { getAvailableTokens } from "../backend-api";
+import { getAvailableTokens } from "../../backend-api";
 
 
 const ASSETMAN_CONFIG_SEEDS = Buffer.from("assetman-configs", "utf-8")
@@ -24,21 +24,21 @@ const MAIN_VAULTS_SEED = Buffer.from("main-vault", "utf-8");
 const USER_VAULTS_SEED = Buffer.from("user-vault");
 
 
-type AssetmanConfigs = {
+type SolanaAssetmanConfigs = {
     rpc: string,
     privateKey: string,
     address: string,
 }
 
-export class Assetman {
-    configs: AssetmanConfigs;
+export class SolanaAssetman {
+    configs: SolanaAssetmanConfigs;
     private PROGRAM_ID: PublicKey;
     private connection: Connection;
     private wallet:anchor.Wallet;
     private provider: anchor.Provider;
     private program: anchor.Program<ZexAssetmanSol>
 
-    constructor(configs: AssetmanConfigs) {
+    constructor(configs: SolanaAssetmanConfigs) {
         this.configs = configs;
 
         this.connection = new Connection(configs.rpc, "finalized");

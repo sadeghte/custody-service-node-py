@@ -3,7 +3,11 @@ from solana.rpc.async_api import AsyncClient
 from fastecdsa import keys, curve
 from fastecdsa.encoding.sec1 import SEC1Encoder
 from .zellular import Zellular
+from .utils import get_env_or_error
 import hashlib
+
+
+SERVER_IP = get_env_or_error("SERVER_IP")
 
 VALID_IPS = {
 	"127.0.0.1": []
@@ -46,7 +50,7 @@ def generate_privates_and_nodes_info(number: int = 100):
 		nodes_info_dict[id] = {
 			"id": id,
 			"public_key": compressed_pub_key,
-			"host": "159.69.192.98",
+			"host": SERVER_IP,
 			"port": str(5000 + i),
 		}
 		privates_list.append(new_private)

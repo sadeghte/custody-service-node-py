@@ -50,3 +50,11 @@ export async function callRpc(url: string, method: string, params?: any, id: num
         throw error;
     }
 }
+
+export function getEnvOrError(name:string): string {
+    const value: string | undefined = process.env[name]
+    if(value === undefined)
+        throw `The env variable '${name}' not set`
+    else
+        return value
+}

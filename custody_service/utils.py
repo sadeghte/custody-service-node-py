@@ -1,4 +1,4 @@
-import httpx, json
+import httpx, json, os
 from .zellular import Zellular
 
 
@@ -36,3 +36,9 @@ async def call_rpc_method(endpoint: str, method: str, params: any, id: int = 1) 
         if "error" in result:
             raise Exception(f"RPC Error: {result['error']}")
         return result
+    
+def get_env_or_error(name):
+    value = os.getenv(name)
+    if value is None:
+        raise EnvironmentError(f"Missing required environment variable: {name}")
+    return value

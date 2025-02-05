@@ -5,6 +5,7 @@ import { Db, MongoClient, Collection, Document, CreateIndexesOptions } from "mon
 interface AvsSignature {
     verifyingKey: string;
     signature: string;
+    nonSigners: string[];
 }
 
 export type WithdrawStatus = "initialized" | "approved" | "in-progress" | "transferred"

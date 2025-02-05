@@ -1,7 +1,7 @@
 from pyfrost.network.abstract import Validators, DataManager, NodesInfo as BaseNodeInfo
 from .configs import VALID_IPS, generate_privates_and_nodes_info
 from custody_service import database
-from custody_service.chain_utils import solana_chain_utils
+from custody_service.chain_utils import solana_chain_utils, ton_chain_utils
 import hashlib
 import json
 
@@ -59,6 +59,8 @@ class NodeValidators(Validators):
                 match withdraw["targetChain"]:
                     case "SOL":
                         hash_hex = solana_chain_utils.hash_withdraw(withdraw)
+                    case "TON":
+                        hash_hex = ton_chain_utils.hash_withdraw(withdraw)
                 result["hash"] = hash_hex
                 return result
             case _:

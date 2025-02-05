@@ -17,8 +17,18 @@ import asyncio
 # TODO: Merge examples with libp2p.
 
 
-FROST_KEY_CONFIG_PATH = "./frost-keys/SOL.json"
 zellular = get_zellular()
+
+CHAIN_KEY_TYPE = {
+    'SOL': 'ed25519',
+    'TON': 'ed25519',
+}
+
+def get_key_path(key_type: str):
+    return f"./frost-keys/{key_type}.json"
+
+def get_chain_key_path(chain: str):
+    return get_key_path(CHAIN_KEY_TYPE[chain]);
 
 def init_logs():
     file_path = "logs"
@@ -40,22 +50,20 @@ def init_logs():
     root_logger.setLevel(logging.DEBUG)
 
 
-async def init():
-    total_node_number = int(sys.argv[2])
-    threshold = int(sys.argv[3])
-        
+async def init(key_type, node_count, threshold):
     nodes_info = NodesInfo()
-    all_nodes = nodes_info.get_all_nodes(total_node_number)
+    all_nodes = nodes_info.get_all_nodes(node_count)
     dkg_handler = DkgHandler(nodes_info, default_timeout=50)
 
     # Requesting DKG:
     now = timeit.default_timer()
-    dkg_key = await dkg_handler.request_dkg(threshold, all_nodes, "ed25519")
+    dkg_key = await dkg_handler.request_dkg(threshold, all_nodes, key_type)
     then = timeit.default_timer()
     
     # Writing JSON data to the file
-    os.makedirs(os.path.dirname(FROST_KEY_CONFIG_PATH), exist_ok=True)
-    with open(FROST_KEY_CONFIG_PATH, "w") as file:
+    key_path = get_key_path(key_type);
+    os.makedirs(os.path.dirname(key_path), exist_ok=True)
+    with open(key_path, "w") as file:
         json.dump(dkg_key, file, indent=4)
 
     logging.info(f"Requesting DKG takes: {then - now} seconds.")
@@ -64,12 +72,12 @@ async def init():
     print(f"DKG done. result: {dkg_key['result']}");
     print(f"Key ID: {dkg_key['public_key']}");
 
-
-async def run_withdraw_executer() -> None:
+async def run_withdraw_executer(chain: str) -> None:
     nodes_info = NodesInfo()
     sa = SA(nodes_info, default_timeout=50)
 
-    with open(FROST_KEY_CONFIG_PATH, "r") as file:
+    key_path = get_chain_key_path(chain)
+    with open(key_path, "r") as file:
         dist_key = json.load(file)
 
     if dist_key is None:
@@ -81,9 +89,9 @@ async def run_withdraw_executer() -> None:
     # for each signature we select a random subset
     # only nonce[0] will be tested
     while True:
-        withdraws = list(database.get_withdraws(status="initialized"))
+        withdraws = list(database.get_withdraws(status="initialized", target_chain=chain))
         count = len(withdraws)
-        logging.info(f"[{count}] pending withdraw found.")
+        logging.info(f"[{count}] pending {chain} chain withdraw found.")
         
         if count > 0:
             # select random partners
@@ -142,12 +150,21 @@ async def run_withdraw_executer() -> None:
 if __name__ == "__main__":
     init_logs()
     
-    if len(sys.argv) > 1 and sys.argv[1] == "init":
-        asyncio.run(init())
+    if len(sys.argv) < 2:
+        raise Exception("Arguments missing")
+    
+    if sys.argv[1] == "init":
+        if len(sys.argv) < 5:
+            raise Exception("Missing key type argument.")
+        
+        [_, _, key_type, node_count, threshold] = sys.argv
+        print("initialising FROST key: ", {'key_type': key_type, 'node_count': node_count, 'threshold': threshold})
+        asyncio.run(init(key_type, int(node_count), int(threshold)))
     else:
+        chain = sys.argv[1];
         sys.set_int_max_str_digits(0)
 
         try:
-            asyncio.run(run_withdraw_executer())
+            asyncio.run(run_withdraw_executer(chain))
         except KeyboardInterrupt:
             pass

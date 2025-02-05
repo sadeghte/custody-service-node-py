@@ -79,7 +79,7 @@ def get_deposit_address(program_id: str, agent: str, account: int, index: int) -
     (deposit_address, _) = Pubkey.find_program_address(seeds, program_id)
 
     # Return the PDA as a string
-    return str(deposit_address)
+    return {"address": str(deposit_address)}
 
 
 def __hash_multiple_data(data_list):

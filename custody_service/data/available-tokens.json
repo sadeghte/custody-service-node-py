@@ -3,5 +3,9 @@
         {"symbol": "SOL", "name": "Solana native token", "decimals": 9},
         {"symbol": "Coin1", "name": "Coint 1", "decimals": 4, "contract": "81EnneC8Z5TPFCU8qUrBQnEfSYeSMGEVJs8uiTSbJWf6"},
         {"symbol": "Coin2", "name": "Coint 2", "decimals": 2, "contract": "4K4w8M9qSti8eAPS7Rc72xMuqRVoq9cmpibmVpHfo4No"}
+    ],
+    "TON": [
+        {"symbol": "TON", "name": "Ton native token", "decimals": 9},
+        {"symbol": "AIOTX", "name": "Aiotx", "decimals": 9, "contract": "kQAiboDEv_qRrcEdrYdwbVLNOXBHwShFbtKGbQVJ2OKxY_Di"}
     ]
 }

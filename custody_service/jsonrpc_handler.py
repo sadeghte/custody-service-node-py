@@ -7,12 +7,25 @@ from custody_service.custom_types import ZellularTx
 from custody_service.utils import get_zellular
 from .zellular import Zellular
 from .chain_utils import solana_chain_utils
+from .chain_utils import ton_chain_utils
+from .utils import get_env_or_error
 import json
 import logging
 import types, os, secrets
 
 
 zellular = get_zellular()
+
+
+ASSETMAN_ADDR = {
+    'SOL': get_env_or_error("SOLANA_ASSETMAN_ADDRESS"),
+    'TON': get_env_or_error("TON_ASSETMAN_ADDRESS"),
+}
+
+ALL_CHIAN_UTILS = {
+    'SOL': solana_chain_utils,
+    'TON': ton_chain_utils
+}
 
 def request_handler(func):
     @wraps(func)
@@ -43,9 +56,10 @@ def get_available_tokens(chain: str=None):
         data = json.load(file)
         
     if chain is not None:
-        data = data[chain]
+        data = data.get(chain, []);
         
     return data;
+
 
 
 class JsonRpcHandler:
@@ -124,26 +138,28 @@ class JsonRpcHandler:
                     })
                     
                 case "createDepositAddressRange":
-                    agent_id = params["agent"]
                     chain = params["chain"]
-                    if chain not in ["SOL"]:
+                    agent = params["agent"]
+                    account = params.get('account', 0);
+                    if chain not in ["SOL", "TON"]:
                         raise Exception("chain not supported")
                     [addr_from, addr_to] = params["addressRange"]
-                    SOLANA_ASSETMAN_ADDRESS = os.getenv("SOLANA_ASSETMAN_ADDRESS")
+                    print({chain, addr_from, addr_to, agent, account})
+                    
                     txs: list[ZellularTx] = [
                         {
                             "type": "CreateDepositAddress",
                             "data": {
-                                "agent": agent_id, 
-                                "account": 0, 
                                 "chain": chain, 
+                                "agent": agent, 
+                                "account": account, 
                                 "user": user, 
-                                "address": solana_chain_utils.get_deposit_address(
-                                        SOLANA_ASSETMAN_ADDRESS,
-                                        agent_id,
-                                        0,
-                                        user
-                                    )
+                                **ALL_CHIAN_UTILS[chain].get_deposit_address(
+                                    ASSETMAN_ADDR[chain],
+                                    agent,
+                                    account,
+                                    user
+                                )
                             }
                         }
                         for user in range(addr_from, addr_to)
@@ -156,10 +172,9 @@ class JsonRpcHandler:
                     })
                     
                 case "getDepositAddresses":
-                    agent_id = params["agent"] if "agent" in params else None
-                    chain = params["chain"]
+                    agent = params["agent"] if "agent" in params else None
                     
-                    query = database.get_deposit_addresses(agent_id, chain)
+                    query = database.get_deposit_addresses(agent)
                     return jsonify({
                         "jsonrpc": "2.0",
                         "id": request_id,
@@ -209,8 +224,11 @@ class JsonRpcHandler:
                     amount = params["amount"]
                     to_address = params["toAddress"]
                     
-                    available_tokens = get_available_tokens("SOL")
+                    available_tokens = get_available_tokens(target_chain)
                     token_info = next((item for item in available_tokens if item["symbol"] == token_symbol), None)
+                    
+                    if token_info is None:
+                        raise Exception('Withdrawing token info not found')
                     
                     add_withdraw_tx: ZellularTx = {
                         "type": "AddWithdraw",
