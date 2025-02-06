@@ -58,9 +58,20 @@ export async function updateDeposit(filter: Record<string, any>, update: Record<
 }
 
 export async function getChainLastDeposit(chain: ChainID) {
-    return depositsCollection
-        .find()
-        .sort({ "extra.lt": -1 }).limit(1).toArray()
+    return Promise.all([
+        // native token search
+        depositsCollection
+            .find({ "chain": chain, "deposit.contract": { $exists: false } })
+            .sort({ "extra.lt": -1 })
+            .limit(1)
+            .toArray()[0],
+        // other tokens search
+        depositsCollection
+            .find({ "chain": chain, "deposit.contract": { $exists: true } })
+            .sort({ "extra.lt": -1 })
+            .limit(1)
+            .toArray()[0]
+    ])
 }
 
 type GetWithdrawsQuery = {
