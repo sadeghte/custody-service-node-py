@@ -22,11 +22,15 @@ async function detectDeposits() {
 
     // load from local database
     const [last_ton_deposit, last_jetton_deposit] = await database.getChainLastDeposit(ChainID.Ton)
-    if(last_ton_deposit) {
+    if(!!last_ton_deposit) {
+        console.log(last_ton_deposit)
+        // @ts-ignore
         tonLT = parseInt(last_ton_deposit.extra.lt)
     }
-    if(last_jetton_deposit) {
-        jettonLT = parseInt(last_ton_deposit.extra.lt)
+    if(!!last_jetton_deposit) {
+        console.log(last_jetton_deposit)
+        // @ts-ignore
+        jettonLT = parseInt(last_jetton_deposit.extra.lt)
     }
 
     // load network LT if needed.
