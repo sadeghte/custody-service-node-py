@@ -77,7 +77,7 @@ export async function getChainLastDeposit(chain: ChainID) {
             { $sort: { sortNumber: -1 } },
             { $limit: 1 }
         ])
-            .toArray(),
+            .toArray()[0],
         // other tokens search
         depositsCollection.aggregate([
             { $match: { "chain": chain, "deposit.contract": { $exists: true } } },
@@ -85,7 +85,7 @@ export async function getChainLastDeposit(chain: ChainID) {
             { $sort: { sortNumber: -1 } },
             { $limit: 1 }
         ])
-            .toArray(),
+            .toArray()[0],
     ])
 }
 

@@ -14,6 +14,7 @@ const TON_ASSETMAN_ADDRESS:string = getEnvOrError('TON_ASSETMAN_ADDRESS');
 const TON_MNEMONIC:string = getEnvOrError('TON_MNEMONIC');
 
 async function detectDeposits() {
+    console.log("deposit detector started.")
     await database.init();
 
     // TODO: load this values from local database
@@ -23,12 +24,10 @@ async function detectDeposits() {
     // load from local database
     const [last_ton_deposit, last_jetton_deposit] = await database.getChainLastDeposit(ChainID.Ton)
     if(!!last_ton_deposit) {
-        console.log(last_ton_deposit)
         // @ts-ignore
         tonLT = parseInt(last_ton_deposit.extra.lt)
     }
     if(!!last_jetton_deposit) {
-        console.log(last_jetton_deposit)
         // @ts-ignore
         jettonLT = parseInt(last_jetton_deposit.extra.lt)
     }
@@ -47,6 +46,7 @@ async function detectDeposits() {
     console.log("Ton deposit detector:", {TON_ASSETMAN_ADDRESS, tonLT, jettonLT})
 
     while (true) {
+        console.log("checking deposits ...")
         const depositWallets = await database.getDepositAddresses({ chain: 'TON' })
         const availableTokens = await CustodyService.getAvailableTokens('TON')
         const allowedTokenContracts = availableTokens.map(t => t.contract).filter(c => !!c)
