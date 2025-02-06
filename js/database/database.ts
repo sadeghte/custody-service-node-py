@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import * as dbDeposits from "./db-deposits"
 import * as dbDepositAddrs from "./db-deposit-addrs"
 import * as dbWithdraws from "./db-withdraws"
-import { ChainID, DepositAddressDoc } from "js/types";
+import { ChainID, DepositAddressDoc } from "../types";
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ let withdrawsCollection: Collection;
 export async function init() {
     if (!process.env.MONGODB)
         throw "MONGODB env variables not loaded correctly.";
-    
+
     const client = new MongoClient(process.env.MONGODB);
     await client.connect();
     db = client.db();
@@ -34,7 +34,7 @@ export async function init() {
 }
 
 // Get deposit addresses
-export async function getDepositAddresses(filter: {agent?: string, chain?: string} = {}): Promise<DepositAddressDoc[]> {
+export async function getDepositAddresses(filter: { agent?: string, chain?: string } = {}): Promise<DepositAddressDoc[]> {
     // @ts-ignore
     return addressCollection.find(filter).toArray();
 }
@@ -58,26 +58,41 @@ export async function updateDeposit(filter: Record<string, any>, update: Record<
 }
 
 export async function getChainLastDeposit(chain: ChainID) {
+    let sortQuery;
+    switch (chain) {
+        case ChainID.Solana:
+            sortQuery = { $addFields: { sortNumber: { $toLong: "block" } } };
+            break;
+        case ChainID.Ton:
+            sortQuery = { $addFields: { sortNumber: { $toLong: "$extra.lt" } } };
+            break;
+        default:
+            throw `database.getChainLastDeposit: Unknown chain ${chain}`
+    }
     return Promise.all([
         // native token search
-        depositsCollection
-            .find({ "chain": chain, "deposit.contract": { $exists: false } })
-            .sort({ "extra.lt": -1 })
-            .limit(1)
-            .toArray()[0],
+        depositsCollection.aggregate([
+            { $match: { "chain": chain, "deposit.contract": { $exists: false } } },
+            sortQuery,
+            { $sort: { sortNumber: -1 } },
+            { $limit: 1 }
+        ])
+            .toArray(),
         // other tokens search
-        depositsCollection
-            .find({ "chain": chain, "deposit.contract": { $exists: true } })
-            .sort({ "extra.lt": -1 })
-            .limit(1)
-            .toArray()[0]
+        depositsCollection.aggregate([
+            { $match: { "chain": chain, "deposit.contract": { $exists: true } } },
+            sortQuery,
+            { $sort: { sortNumber: -1 } },
+            { $limit: 1 }
+        ])
+            .toArray(),
     ])
 }
 
 type GetWithdrawsQuery = {
     targetChain: string,
     status?: dbWithdraws.WithdrawStatus,
-    transferTx?: string | {"$exists": boolean}
+    transferTx?: string | { "$exists": boolean }
 }
 export async function getWithdraws(query: GetWithdrawsQuery): Promise<dbWithdraws.WithdrawDoc[]> {
     // @ts-ignore

@@ -106,7 +106,7 @@ export function getBlockTransfers(block: VersionedBlockResponse, watchingWallets
           solTransfers.push({
             txHash,
             address: account,
-            change: solBalanceChange, // Lamports (1 SOL = 10^9 Lamports)
+            change: solBalanceChange.toString(), // Lamports (1 SOL = 10^9 Lamports)
           });
         }
       });
@@ -134,7 +134,7 @@ export function getBlockTransfers(block: VersionedBlockResponse, watchingWallets
           splTransfers.push({
             txHash,
             address: account,
-            change: tokenBalanceChange,
+            change: tokenBalanceChange.toString(),
             token: tokensMap[mint],
           });
         }
