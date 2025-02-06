@@ -32,16 +32,16 @@ async function detectDeposits() {
         jettonLT = parseInt(last_jetton_deposit.extra.lt)
     }
 
-    // load network LT if needed.
-    if(tonLT == 0 || jettonLT == 0){
-        const masterchainInfo = await TonChainUtils.getMasterChainInfo();
-        const startLT = parseInt(masterchainInfo.last.start_lt);
+    // // load network LT if needed.
+    // if(tonLT == 0 || jettonLT == 0){
+    //     const masterchainInfo = await TonChainUtils.getMasterChainInfo();
+    //     const startLT = parseInt(masterchainInfo.last.start_lt);
 
-        if(tonLT == 0)
-            tonLT = startLT;
-        if(jettonLT == 0)
-            jettonLT = startLT;
-    }
+    //     if(tonLT == 0)
+    //         tonLT = startLT;
+    //     if(jettonLT == 0)
+    //         jettonLT = startLT;
+    // }
     
     console.log("Ton deposit detector:", {TON_ASSETMAN_ADDRESS, tonLT, jettonLT})
 
