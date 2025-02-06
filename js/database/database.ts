@@ -69,7 +69,7 @@ export async function getChainLastDeposit(chain: ChainID) {
         default:
             throw `database.getChainLastDeposit: Unknown chain ${chain}`
     }
-    return Promise.all([
+    const [nativeTokenDeposits, tokenDeposits] = await Promise.all([
         // native token search
         depositsCollection.aggregate([
             { $match: { "chain": chain, "deposit.contract": { $exists: false } } },
@@ -77,7 +77,7 @@ export async function getChainLastDeposit(chain: ChainID) {
             { $sort: { sortNumber: -1 } },
             { $limit: 1 }
         ])
-            .toArray()[0],
+            .toArray(),
         // other tokens search
         depositsCollection.aggregate([
             { $match: { "chain": chain, "deposit.contract": { $exists: true } } },
@@ -85,8 +85,10 @@ export async function getChainLastDeposit(chain: ChainID) {
             { $sort: { sortNumber: -1 } },
             { $limit: 1 }
         ])
-            .toArray()[0],
+            .toArray(),
     ])
+
+    return [nativeTokenDeposits[0], tokenDeposits[0]]
 }
 
 type GetWithdrawsQuery = {
