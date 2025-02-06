@@ -17,10 +17,30 @@ async function detectDeposits() {
     await database.init();
 
     // TODO: load this values from local database
-    const masterchainInfo = await TonChainUtils.getMasterChainInfo();
-    const startLT = parseInt(masterchainInfo.last.start_lt);
-    console.log("Ton deposit detector:", {TON_ASSETMAN_ADDRESS, startLT})
-    let tonLT:number = startLT, jettonLT:number = startLT;
+
+    let tonLT:number = 0, jettonLT:number = 0;
+
+    // load from local database
+    const [last_ton_deposit, last_jetton_deposit] = await database.getChainLastDeposit(ChainID.Ton)
+    if(last_ton_deposit) {
+        tonLT = parseInt(last_ton_deposit.extra.lt)
+    }
+    if(last_jetton_deposit) {
+        jettonLT = parseInt(last_ton_deposit.extra.lt)
+    }
+
+    // load network LT if needed.
+    if(tonLT == 0 || jettonLT == 0){
+        const masterchainInfo = await TonChainUtils.getMasterChainInfo();
+        const startLT = parseInt(masterchainInfo.last.start_lt);
+
+        if(tonLT == 0)
+            tonLT = startLT;
+        if(jettonLT == 0)
+            jettonLT = startLT;
+    }
+    
+    console.log("Ton deposit detector:", {TON_ASSETMAN_ADDRESS, tonLT, jettonLT})
 
     while (true) {
         const depositWallets = await database.getDepositAddresses({ chain: 'TON' })

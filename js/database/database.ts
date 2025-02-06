@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import * as dbDeposits from "./db-deposits"
 import * as dbDepositAddrs from "./db-deposit-addrs"
 import * as dbWithdraws from "./db-withdraws"
-import { DepositAddressDoc } from "js/types";
+import { ChainID, DepositAddressDoc } from "js/types";
 
 dotenv.config();
 
@@ -47,6 +47,7 @@ type GetDepositsOptions = {
     confirmed?: boolean,
     transferred?: boolean,
 }
+
 export async function getDeposits(options: GetDepositsOptions) {
     return depositsCollection.find(options).toArray();
 }
@@ -54,6 +55,12 @@ export async function getDeposits(options: GetDepositsOptions) {
 // Update a deposit
 export async function updateDeposit(filter: Record<string, any>, update: Record<string, any>) {
     return depositsCollection.updateOne(filter, update);
+}
+
+export async function getChainLastDeposit(chain: ChainID) {
+    return depositsCollection
+        .find()
+        .sort({ "extra.lt": -1 }).limit(1).toArray()
 }
 
 type GetWithdrawsQuery = {

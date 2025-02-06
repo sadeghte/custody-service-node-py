@@ -3,7 +3,7 @@ from custody_service.custom_types import ChainId;
 schema = {
     "$jsonSchema": {
         "bsonType": "object",
-        "required": ["chain", "block", "txHash", "agent", "account", "user", "address", "deposit", "confirmed", "transferred"],
+        "required": ["chain", "txHash", "agent", "account", "user", "address", "deposit", "confirmed", "transferred"],
         "properties": {
             "chain": {
                 "enum": [chain.value for chain in ChainId],
