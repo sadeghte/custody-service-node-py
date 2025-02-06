@@ -46,7 +46,10 @@ export type V3ApiPath = 'masterchainInfo' | 'traces' | 'transactions' | 'jetton/
 
 export async function callApiV3(path: V3ApiPath, params?: any) {
     await timeout(1000);
-    const urlParams = new URLSearchParams(params);
+    const urlParams = new URLSearchParams({
+        ...params,
+        api_key: TONCENTER_API_KEY
+    });
     const endpoint = `${TONCENTER_API_HTTP}/${path}?${urlParams.toString()}`
     const response = await axios.get(endpoint, {headers: {"Accept": "application/json"}})
     return response.data;
@@ -267,8 +270,7 @@ export async function callContractAndWait<C>(params: CallAndWaitParams<C>) {
     
     const {transactions} = await getTransactions({
         account: [contractAddress],
-        sort: 'desc', limit: 1, offset: 0,
-        api_key: TONCENTER_API_KEY
+        sort: 'desc', limit: 1, offset: 0
     });
     const start_lt = BigInt(transactions[0]?.lt || '0') + 1n;
 
