@@ -137,6 +137,23 @@ class JsonRpcHandler:
                         "result": result
                     })
                     
+                case "getAgentData":
+                    agent = params["agent"]
+                    
+                    deposit_addrs = database.get_deposit_addresses(agent)
+                    deposits = database.get_deposits(agent)
+                    withdraws = database.get_withdraws(agent)
+                    
+                    return jsonify({
+                        "jsonrpc": "2.0",
+                        "id": request_id,
+                        "result": {
+                            "depositAddresses": [{**d, "_id": str(d["_id"])} for d in deposit_addrs],
+                            "deposits": [{**d, "_id": str(d["_id"])} for d in deposits],
+                            "withdraws": [{**d, "_id": str(d["_id"])} for d in withdraws],
+                        }
+                    })
+                    
                 case "createDepositAddressRange":
                     chain = params["chain"]
                     agent = params["agent"]

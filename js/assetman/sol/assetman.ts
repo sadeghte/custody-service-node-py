@@ -73,6 +73,20 @@ export class SolanaAssetman {
         return tx;
     }
 
+    async setWithdrawAuthority(withdrawAuthority) {
+        const configsPDA = this.getConfigsPDA();
+        const tx = await this.program.methods
+            .setWithdrawAuthority(withdrawAuthority)
+            .accounts({
+                configs: configsPDA,
+                admin: this.wallet.publicKey,
+                // systemProgram: anchor.web3.SystemProgram.programId,
+            })
+            .rpc();
+    
+        return tx;
+    }
+
     async fetchConfigs() {
         const configsPDA = this.getConfigsPDA();
         return await this.program.account.configs.fetch(configsPDA);
