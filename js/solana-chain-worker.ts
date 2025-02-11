@@ -186,7 +186,8 @@ if (ClusterManager.isPrimary) {
         "BlockFetcher",
 
         "BlockProcessor",
-        // "BlockProcessor",
+        "BlockProcessor",
+        "BlockProcessor",
 
         "WithdrawExecuter",
     ]);
