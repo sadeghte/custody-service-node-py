@@ -75,11 +75,13 @@ def insert_deposit(deposit: ZellularDepositTx):
 def get_deposits(agent_id: str, account: int=None, user: int=None):
     account_condition = {"account": account} if account is not None else {}
     user_condition = {"user": user} if user is not None else {}
-    return deposits_collection.find({
-        "agent": agent_id,
-        **account_condition,
-        **user_condition,
-    })
+    return deposits_collection\
+        .find({
+            "agent": agent_id,
+            **account_condition,
+            **user_condition,
+        })\
+        .sort({ '_id': -1 })
 
 def find_withdraw(id: str):
     return withdraws_collection.find_one({"id": id})
@@ -90,13 +92,15 @@ def get_withdraws(agent: str=None, account: int=None, user: int = None, status: 
     user_condition = {"user": user} if user is not None else {}
     status_condition = {"status": status} if status is not None else {}
     chain_condition = {"targetChain": target_chain} if target_chain is not None else {}
-    return withdraws_collection.find({
-        **agent_condition,
-        **account_condition,
-        **user_condition,
-        **status_condition,
-        **chain_condition
-    })
+    return withdraws_collection\
+        .find({
+            **agent_condition,
+            **account_condition,
+            **user_condition,
+            **status_condition,
+            **chain_condition
+        })\
+        .sort({ '_id': -1 })
     
 
 def approve_withdraw(id: str, avs_verifying_key: str, avs_signature: str, nonSigners: list[str]=[]):
