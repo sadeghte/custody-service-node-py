@@ -95,8 +95,8 @@ class JsonRpcHandler:
             print("new rpc request: ", data)
             version = data["jsonrpc"]
             method = data["method"]
-            params = data["params"]
-            request_id = data["id"] if "id" in data else None;
+            params = data.get("params") or {}
+            request_id = data.get("id")
 
             if version != "2.0":
                 raise Exception("Invalid JSON-RPC version")
